@@ -1,0 +1,55 @@
+#app {
+  margin: 0 auto;
+  max-width: 300px;
+  min-height: 100vh;
+  border: 1px solid black;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+#app div {
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+}
+
+.amplitude {
+  min-height: 50px;
+  flex-grow: 0;
+}
+
+.btn {
+  border-color: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 5px 15px;
+  font-size: 1rem;
+  line-height: 1.5;
+  font-weight: 400;
+  width: 100px;
+}
+
+.start-btn {
+  background-color: #00d1b2;
+  color: #ffffff;
+  width: 100px;
+  margin-bottom: 10px;
+}
+
+.start-btn:hover {
+  background-color: #00b89c;
+}
+
+.target-btn {
+  background-color: white;
+  border: 1px solid #dbdbdb;
+}
+
+.success {
+  background-color: #23d160;
+  border: none;
+  color: #ffffff;
+
+}

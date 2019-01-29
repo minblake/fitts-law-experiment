@@ -1,20 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
-  <title>Fitts's Law Experiment</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hello Bulma!</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 </head>
 
 <body>
   <div id="app">
-    {{ helloWorld }}
+    <div></div>
+    <div>
+      <button class="btn target-btn">
+        Click me!
+      </button>
+    </div>
+    <div class="amplitude"></div>
+    <div>
+      <button type="button" class="btn start-btn" @click="startTrial">Start</button>
+      <h1>Fitts's Law Experiment</h1>
+    </div>
   </div>
+
   <script src="https://cdn.jsdelivr.net/npm/vue@2.5.22/dist/vue.js"></script>
-  <script src="./app.js"></script>
+  <script src="app.js"></script>
 </body>
 
 </html>
