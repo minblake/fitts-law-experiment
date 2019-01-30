@@ -1,72 +1,53 @@
 #app {
-  padding: 20px;
-  height: 100vh;
+  min-height: 100vh;
+}
+
+.experiment-container {
   display: grid;
+  height: 95vh;
+  margin: 0 auto;
+  grid-template-columns: [left] 1fr [middle] 1fr [right] 1fr;
+  grid-template-rows: [top] 1fr repeat(2, 1fr) [middle] 1fr repeat(2, 1fr) [bottom] 1fr;
   justify-items: center;
   align-items: center;
-  grid-template-columns: [left] 1fr 1fr [big-right] 1fr [right] 1fr;
-  grid-template-rows: [top] 1fr repeat(2, 1fr) [middle] 1fr repeat(2, 1fr) [bottom] 1fr 
-  
 }
 
-.btn {
-  color: #4a4a4a;
-  font-size: 1rem;
-  font-weight: bold;
-  line-height: 1.5;
-  text-align: center;
-  justify-content: center;
-  cursor: pointer;
-  padding: 5px;
-  background-color: white;
-  border: 1px solid #dbdbdb;
-  height: 50%;
-  width: 100%;
-  border-radius: 4px;
-}
-
-.success {
-  background-color: #23d160;
-  border-color: transparent;
-  color: #fff;
-}
-
-.error {
-  background-color: #ff3860;
-  border-color: transparent;
-  color: #fff;
-}
-
-.big {
-  grid-column: span 2;
-  height: 100%;
+.medium {
+  width: 100px;
+  height: 50px;
 }
 
 .small {
-  width: 50%;
-  height: 40%;
-  font-size: .75rem;
-}
-.left {
-  grid-column-start: left;
+  width: 50px;
+  height: 25px;
+  font-size: 0.7em;
 }
 
-.right {
-  grid-column: right;
-}
-.big-right {
-  grid-column: big-right / span 2;
-  height: 100%;
+.large {
+  width: 150px;
+  height: 75px;
 }
 
 .top {
   grid-row-start: top;
 }
 
-.middle {
+.midrow {
   grid-row-start: middle;
 }
 
 .bottom {
   grid-row-start: bottom;
+}
+
+.left {
+  grid-column-start: left;
+}
+
+.midcol {
+  grid-column-start: middle;
+}
+
+.right {
+  grid-column-start: right;
 }

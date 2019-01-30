@@ -4,18 +4,38 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Fitts's Law Experiment</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
   <link rel="stylesheet" href="style.css">
-  <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+  <title>Fitts's Law Experiment</title>
 </head>
 
 <body>
   <div id="app">
-    <button id="target" class="btn big-right top">Target</button>
-    <button id="start" class="btn big-right middle">Start</button>
+    <section v-if="!hasExperimentStarted" class="hero is-primary is-fullheight">
+      <div class="hero-body">
+        <div class="container has-text-centered">
+          <h1 class="title">Fitts's Law Experiment</h1>
+          <h2 class="subtitle">HCI II</h2>
+          <button type="button" class="button is-primary is-inverted is-large" @click="startExperiment">Start
+            Experiment</button>
+        </div>
+      </div>
+    </section>
+    <div v-if="hasExperimentStarted && !hasTrialEnded" class="experiment-container" @click="recordError">
+      <button class="button fitts" :class="startBtnClass" @click="selectedStart" type="button">Start</button>
+      <button v-if="isStartSelected" class="button fitts" :class="targetBtnClass" @click="selectedTarget" type="button">Target</button>
+    </div>
+    <section v-if="hasTrialEnded" class="hero is-light is-fullheight">
+      <div class="hero-body">
+        <div class="container has-text-centered">
+          <h1 class="title">{{ trialScreenMsg }}</h1>
+          <button type="button" class="button is-primary is-inverted is-large" @click="startAnotherTrial">Continue</button>
+        </div>
+      </div>
+    </section>
   </div>
 
+  <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue@2.5.22/dist/vue.js"></script>
   <script src="app.js"></script>
 </body>
