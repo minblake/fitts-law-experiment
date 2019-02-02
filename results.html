@@ -1,0 +1,15 @@
+ <!DOCTYPE html>
+<html>
+<body>
+    <ul id="app" style="list-style-type:none;">
+      <li v-for="(result, index) in results">
+      	<!-- {{ item.startTime }} -->
+        <!-- {{ index }} {{ item.record }} -->
+        {{index}} {{ result.record }}
+      </li>
+    </ul>
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.22/dist/vue.js"></script>
+  <script src="app.js"></script>	
+</body>
+</html>

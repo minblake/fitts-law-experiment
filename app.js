@@ -1,3 +1,25 @@
+/*var resultRecords = new Vue({
+  el: '#results',
+  data: {
+    items: [
+      { record: 'Foo' },
+      { record: 'Bar' }
+    ]
+  }
+})
+*/
+
+// var resultRecords = new Vue({
+//   el: '#results',
+//   data: {
+//     items: [
+//       { startTime: 'abc'},
+//       { record: 'Foo' },
+//       { record: 'Bar' }
+//     ]
+//   }
+// })
+
 new Vue({
   el: '#app',
   data: {
@@ -23,7 +45,7 @@ new Vue({
     targetSizeAndPosition: '',
     isStartSelected: false,
     isTargetSelected: false,
-
+    results: [{record: 'zz'}]
   },
   methods: {
     startExperiment() {
@@ -96,6 +118,7 @@ new Vue({
 
       // notify user that they clicked successfully the target
       // shorten the time if necessary
+      this.addRecord();
       setTimeout(() => {
         this.isStartSelected = false;
         this.isTargetSelected = false;
@@ -108,7 +131,9 @@ new Vue({
         }
       }, 300);
     },
-
+    addRecord() {
+      this.results.push({ record: 'xyz' });
+    },
     // TODO: called when user doesn't click the buttons
     recordError(event) {
       if (!event.target.classList.contains("fitts")) {
