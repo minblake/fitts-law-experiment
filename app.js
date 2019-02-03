@@ -8,24 +8,29 @@ new Vue({
     maxNumTrials: 10,
     amplitudes: [
       {
+        amplitude: 'short',
         start: 'bottom right',
         target: 'bottom left'
       },
       {
+        amplitude: 'normal',
         start: 'midrow left',
         target: 'top left'
       },
       {
+        amplitude: 'long',
         start: 'top midcol',
         target: 'bottom midcol'
       },
     ],
+    currentButtonState: { size: '', amplitude: '' },
     randomAmp: {},
     startSizeAndPosition: '',
     targetSizeAndPosition: '',
     isStartSelected: false,
     results: [],
     clickSpeed: 0,
+    timer: null,
     timerStarted: false
   },
   methods: {
@@ -34,6 +39,12 @@ new Vue({
       this.hasExperimentEnded = false;
       this.numTrials = 0;
       this.startTrial();
+    },
+    endExperiment() {
+      this.hasExperimentStarted = false;
+      this.hasExperimentEnded = false;
+      this.numTrials = 0;
+      this.results = [];
     },
     startTrial() {
       this.hasTrialEnded = false;
@@ -49,9 +60,10 @@ new Vue({
     attachRandomClass() {
       const size = this.getRandomSize();
 
-      const randomClass = this.randomAmp[size].pop();
-      this.startSizeAndPosition = size + ' ' + randomClass.start;
-      this.targetSizeAndPosition = size + ' ' + randomClass.target;
+      const { amplitude, start, target } = this.randomAmp[size].pop();
+      this.currentButtonState = { size, amplitude };
+      this.startSizeAndPosition = size + ' ' + start;
+      this.targetSizeAndPosition = size + ' ' + target;
 
       if (!this.randomAmp[size].length) {
         delete this.randomAmp[size];
@@ -112,15 +124,21 @@ new Vue({
     startTimer() {
       if (!this.timerStarted && this.isStartSelected) {
         this.timerStarted = true;
-        setInterval(this.updateTime, 1);
+        this.timer = setInterval(this.updateTime, 1);
       }
     },
     stopTimer() {
       this.timerStarted = false;
-      clearInterval();
+      clearInterval(this.timer);
     },
     addRecord() {
-      this.results.push({ trialNum: this.numTrials, record: this.clickSpeed });
+      const { amplitude, size } = this.currentButtonState;
+      this.results.push({
+        trialNum: this.numTrials,
+        record: this.clickSpeed,
+        amplitude,
+        size
+      });
       this.clickSpeed = 0;
     },
     // TODO: called when user doesn't click the buttons
@@ -145,9 +163,6 @@ new Vue({
       return [
         this.targetSizeAndPosition
       ]
-    },
-    trialScreenMsg() {
-      return this.numTrials <= this.maxNumTrials ? `Trial ${this.numTrials} / ${this.maxNumTrials}` : 'Thank you for participating!';
     }
   }
 });
