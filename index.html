@@ -11,7 +11,7 @@
 
 <body>
   <div id="app">
-    <section v-if="!hasExperimentStarted" class="hero is-primary is-fullheight">
+    <section v-if="!hasExperimentStarted && !hasExperimentEnded" class="hero is-primary is-fullheight">
       <div class="hero-body">
         <div class="container has-text-centered">
           <h1 class="title">Fitts's Law Experiment</h1>
@@ -25,11 +25,21 @@
       <button class="button fitts" :class="startBtnClass" @click="selectedStart" type="button">Start</button>
       <button v-if="isStartSelected" class="button fitts" :class="targetBtnClass" @click="selectedTarget" type="button">Target</button>
     </div>
-    <section v-if="hasTrialEnded" class="hero is-light is-fullheight">
+    <section v-if="hasTrialEnded && !hasExperimentEnded" class="hero is-light is-fullheight">
       <div class="hero-body">
         <div class="container has-text-centered">
-          <h1 class="title">{{ trialScreenMsg }}</h1>
-          <button type="button" class="button is-primary is-inverted is-large" @click="startAnotherTrial">Continue</button>
+          <h1 class="title">Trials Completed</h1>
+          <h2 class="subtitle">{{ this.numTrials }} / {{ maxNumTrials }}</h2>
+          <button type="button" class="button is-primary is-inverted is-large" @click="startTrial">Continue</button>
+        </div>
+      </div>
+    </section>
+    <section v-if="hasExperimentEnded" class="hero is-light is-fullheight">
+      <div class="hero-body">
+        <div class="container has-text-centered">
+          <h1 class="title">Thank you!</h1>
+          <hr>
+          <a type="button" class="button is-primary is-primary is-large" :href="downloadLink" download="results.csv">Download</a>
         </div>
       </div>
     </section>

@@ -2,42 +2,50 @@ new Vue({
   el: '#app',
   data: {
     hasExperimentStarted: false,
+    hasExperimentEnded: false,
     hasTrialEnded: false,
     numTrials: 0,
+    maxNumTrials: 2,
     amplitudes: [
       {
+        amplitude: 'short',
         start: 'bottom right',
         target: 'bottom left'
       },
       {
+        amplitude: 'normal',
         start: 'midrow left',
         target: 'top left'
       },
       {
+        amplitude: 'long',
         start: 'top midcol',
         target: 'bottom midcol'
       },
     ],
+    currentButtonState: { size: '', amplitude: '' },
     randomAmp: {},
     startSizeAndPosition: '',
     targetSizeAndPosition: '',
     isStartSelected: false,
-    isTargetSelected: false,
-
+    results: [],
+    clickSpeed: 0,
+    timer: null,
+    timerStarted: false
   },
   methods: {
     startExperiment() {
       this.hasExperimentStarted = true;
-      this.numTrials++;
-      this.generateRandomAmp();
-
-      // Make the start and target button appear in random location from the start
-      this.attachRandomClass();
+      this.hasExperimentEnded = false;
+      this.numTrials = 0;
+      this.startTrial();
     },
-    startAnotherTrial() {
+    startTrial() {
       this.hasTrialEnded = false;
-      if (this.numTrials > 10) {
+      this.numTrials++;
+      if (this.numTrials > this.maxNumTrials) {
         this.hasExperimentStarted = false;
+        this.hasExperimentEnded = true;
       } else {
         this.generateRandomAmp();
         this.attachRandomClass();
@@ -46,9 +54,10 @@ new Vue({
     attachRandomClass() {
       const size = this.getRandomSize();
 
-      const randomClass = this.randomAmp[size].pop();
-      this.startSizeAndPosition = size + ' ' + randomClass.start;
-      this.targetSizeAndPosition = size + ' ' + randomClass.target;
+      const { amplitude, start, target } = this.randomAmp[size].pop();
+      this.currentButtonState = { size, amplitude };
+      this.startSizeAndPosition = size + ' ' + start;
+      this.targetSizeAndPosition = size + ' ' + target;
 
       if (!this.randomAmp[size].length) {
         delete this.randomAmp[size];
@@ -84,31 +93,45 @@ new Vue({
     generateRandomValue(max) {
       return Math.floor(Math.random() * max);
     },
-    // TODO: start timer when start button is pressed
     selectedStart() {
       this.isStartSelected = true;
-      // start timer
+      this.startTimer();
     },
-    // TODO: stop timer when target button is pressed
     selectedTarget() {
-      this.isTargetSelected = true;
       // stop timer
+      this.stopTimer();
+      this.addRecord();
 
-      // notify user that they clicked successfully the target
-      // shorten the time if necessary
-      setTimeout(() => {
-        this.isStartSelected = false;
-        this.isTargetSelected = false;
+      this.isStartSelected = false;
 
-        if (Object.keys(this.randomAmp).length === 0) {
-          this.numTrials++;
-          this.hasTrialEnded = true;;
-        } else {
-          this.attachRandomClass();
-        }
-      }, 300);
+      if (Object.keys(this.randomAmp).length === 0) {
+        this.hasTrialEnded = true;;
+      } else {
+        this.attachRandomClass();
+      }
     },
-
+    updateTime() {
+      if (this.timerStarted) {
+        this.clickSpeed++;
+      }
+    },
+    startTimer() {
+      if (!this.timerStarted && this.isStartSelected) {
+        this.timerStarted = true;
+        this.timer = setInterval(this.updateTime, 1);
+      }
+    },
+    stopTimer() {
+      this.timerStarted = false;
+      clearInterval(this.timer);
+    },
+    addRecord() {
+      const { amplitude, size } = this.currentButtonState;
+      this.results.push(
+        [this.numTrials, amplitude, size, this.clickSpeed]
+      );
+      this.clickSpeed = 0;
+    },
     // TODO: called when user doesn't click the buttons
     recordError(event) {
       if (!event.target.classList.contains("fitts")) {
@@ -129,14 +152,12 @@ new Vue({
     },
     targetBtnClass() {
       return [
-        this.targetSizeAndPosition,
-        {
-          'is-success': this.isTargetSelected
-        }
+        this.targetSizeAndPosition
       ]
     },
-    trialScreenMsg() {
-      return this.numTrials <= 10 ? `Trial ${this.numTrials} / 10` : 'Thank you for participating!';
+    downloadLink() {
+      const csv = 'data:text/csv;charset=utf-8,' + this.results.map(result => result.join(',')).join('\n');
+      return encodeURI(csv);
     }
   }
 });
