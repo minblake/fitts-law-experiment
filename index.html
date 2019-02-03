@@ -11,7 +11,7 @@
 
 <body>
   <div id="app">
-    <section v-if="!hasExperimentStarted" class="hero is-primary is-fullheight">
+    <section v-if="!hasExperimentStarted && !hasExperimentEnded" class="hero is-primary is-fullheight">
       <div class="hero-body">
         <div class="container has-text-centered">
           <h1 class="title">Fitts's Law Experiment</h1>
@@ -29,7 +29,7 @@
       <div class="hero-body">
         <div class="container has-text-centered">
           <h1 class="title">{{ trialScreenMsg }}</h1>
-          <button type="button" class="button is-primary is-inverted is-large" @click="startAnotherTrial">Continue</button>
+          <button type="button" class="button is-primary is-inverted is-large" @click="startTrial">Continue</button>
         </div>
       </div>
     </section>
@@ -39,9 +39,9 @@
           <h1 class="title">Results</h1>
           <ul id="app" style="list-style-type:none;">
             <li v-for="(result, index) in results">
-              <!-- {{ item.startTime }} -->
-              <!-- {{ index }} {{ item.record }} -->
-              {{index}} {{ result.trialNum }} {{ result.record }}
+              <p>
+                ({{ index }}) Trial {{ result.trialNum }}: {{ result.record }}
+              </p>
             </li>
           </ul>
           <button type="button" class="button is-primary is-inverted is-large" @click="startExperiment">Try Again</button>

@@ -1,25 +1,3 @@
-/*var resultRecords = new Vue({
-  el: '#results',
-  data: {
-    items: [
-      { record: 'Foo' },
-      { record: 'Bar' }
-    ]
-  }
-})
-*/
-
-// var resultRecords = new Vue({
-//   el: '#results',
-//   data: {
-//     items: [
-//       { startTime: 'abc'},
-//       { record: 'Foo' },
-//       { record: 'Bar' }
-//     ]
-//   }
-// })
-
 new Vue({
   el: '#app',
   data: {
@@ -46,9 +24,7 @@ new Vue({
     startSizeAndPosition: '',
     targetSizeAndPosition: '',
     isStartSelected: false,
-    isTargetSelected: false,
     results: [],
-    timer: null,
     clickSpeed: 0,
     timerStarted: false
   },
@@ -57,14 +33,9 @@ new Vue({
       this.hasExperimentStarted = true;
       this.hasExperimentEnded = false;
       this.numTrials = 0;
-      //this.numTrials++;
-      //this.generateRandomAmp();
-
-      // Make the start and target button appear in random location from the start
-      //this.attachRandomClass();
-      this.startAnotherTrial();
+      this.startTrial();
     },
-    startAnotherTrial() {
+    startTrial() {
       this.hasTrialEnded = false;
       this.numTrials++;
       if (this.numTrials > this.maxNumTrials) {
@@ -72,7 +43,6 @@ new Vue({
         this.hasExperimentEnded = true;
       } else {
         this.generateRandomAmp();
-        // Make the start and target button appear in random location from the start
         this.attachRandomClass();
       }
     },
@@ -117,47 +87,37 @@ new Vue({
     generateRandomValue(max) {
       return Math.floor(Math.random() * max);
     },
-    // TODO: start timer when start button is pressed
     selectedStart() {
       this.isStartSelected = true;
-      // start timer
       this.startTimer();
     },
-    // TODO: stop timer when target button is pressed
     selectedTarget() {
-      this.isTargetSelected = true;
       // stop timer
       this.stopTimer();
-      // notify user that they clicked successfully the target
-      // shorten the time if necessary
       this.addRecord();
-      setTimeout(() => {
-        this.isStartSelected = false;
-        this.isTargetSelected = false;
 
-        if (Object.keys(this.randomAmp).length === 0) {
-          //this.numTrials++;
-          this.hasTrialEnded = true;;
-        } else {
-          this.attachRandomClass();
-        }
-      }, 300);
+      this.isStartSelected = false;
+
+      if (Object.keys(this.randomAmp).length === 0) {
+        this.hasTrialEnded = true;;
+      } else {
+        this.attachRandomClass();
+      }
     },
     updateTime() {
       if (this.timerStarted) {
-        this.clickSpeed ++;
+        this.clickSpeed++;
       }
     },
     startTimer() {
       if (!this.timerStarted && this.isStartSelected) {
         this.timerStarted = true;
-        //timer = setInterval(this.updateTime, 1);
-        timer = setInterval(this.updateTime, 1);
+        setInterval(this.updateTime, 1);
       }
     },
     stopTimer() {
       this.timerStarted = false;
-      clearInterval(timer);
+      clearInterval();
     },
     addRecord() {
       this.results.push({ trialNum: this.numTrials, record: this.clickSpeed });
@@ -183,16 +143,11 @@ new Vue({
     },
     targetBtnClass() {
       return [
-        this.targetSizeAndPosition,
-        {
-          'is-success': this.isTargetSelected
-        }
+        this.targetSizeAndPosition
       ]
     },
     trialScreenMsg() {
-      //return this.numTrials <= 10 ? `Trial ${this.numTrials} / 10` : 'Thank you for participating!';
       return this.numTrials <= this.maxNumTrials ? `Trial ${this.numTrials} / ${this.maxNumTrials}` : 'Thank you for participating!';
-      //return `Trial ${this.numTrials} / 10`
     }
   }
 });
