@@ -25,11 +25,26 @@
       <button class="button fitts" :class="startBtnClass" @click="selectedStart" type="button">Start</button>
       <button v-if="isStartSelected" class="button fitts" :class="targetBtnClass" @click="selectedTarget" type="button">Target</button>
     </div>
-    <section v-if="hasTrialEnded" class="hero is-light is-fullheight">
+    <section v-if="hasTrialEnded && !hasExperimentEnded" class="hero is-light is-fullheight">
       <div class="hero-body">
         <div class="container has-text-centered">
           <h1 class="title">{{ trialScreenMsg }}</h1>
           <button type="button" class="button is-primary is-inverted is-large" @click="startAnotherTrial">Continue</button>
+        </div>
+      </div>
+    </section>
+    <section v-if="hasExperimentEnded" class="hero is-light is-fullheight">
+      <div class="hero-body">
+        <div class="container has-text-centered">
+          <h1 class="title">Results</h1>
+          <ul id="app" style="list-style-type:none;">
+            <li v-for="(result, index) in results">
+              <!-- {{ item.startTime }} -->
+              <!-- {{ index }} {{ item.record }} -->
+              {{index}} {{ result.trialNum }} {{ result.record }}
+            </li>
+          </ul>
+          <button type="button" class="button is-primary is-inverted is-large" @click="startExperiment">Try Again</button>
         </div>
       </div>
     </section>
