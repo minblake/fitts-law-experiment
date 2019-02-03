@@ -5,7 +5,7 @@ new Vue({
     hasExperimentEnded: false,
     hasTrialEnded: false,
     numTrials: 0,
-    maxNumTrials: 10,
+    maxNumTrials: 2,
     amplitudes: [
       {
         amplitude: 'short',
@@ -39,12 +39,6 @@ new Vue({
       this.hasExperimentEnded = false;
       this.numTrials = 0;
       this.startTrial();
-    },
-    endExperiment() {
-      this.hasExperimentStarted = false;
-      this.hasExperimentEnded = false;
-      this.numTrials = 0;
-      this.results = [];
     },
     startTrial() {
       this.hasTrialEnded = false;
@@ -133,12 +127,9 @@ new Vue({
     },
     addRecord() {
       const { amplitude, size } = this.currentButtonState;
-      this.results.push({
-        trialNum: this.numTrials,
-        record: this.clickSpeed,
-        amplitude,
-        size
-      });
+      this.results.push(
+        [this.numTrials, amplitude, size, this.clickSpeed]
+      );
       this.clickSpeed = 0;
     },
     // TODO: called when user doesn't click the buttons
@@ -163,6 +154,10 @@ new Vue({
       return [
         this.targetSizeAndPosition
       ]
+    },
+    downloadLink() {
+      const csv = 'data:text/csv;charset=utf-8,' + this.results.map(result => result.join(',')).join('\n');
+      return encodeURI(csv);
     }
   }
 });

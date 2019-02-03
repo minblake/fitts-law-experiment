@@ -37,16 +37,9 @@
     <section v-if="hasExperimentEnded" class="hero is-light is-fullheight">
       <div class="hero-body">
         <div class="container has-text-centered">
-          <h1 class="title">Results</h1>
-          <ul style="list-style-type:none;">
-            <li v-for="result in results">
-              <p>
-                Trial {{ result.trialNum }}: [{{ result.size }} / {{ result.amplitude }}] {{ result.record }}
-              </p>
-            </li>
-          </ul>
+          <h1 class="title">Thank you!</h1>
           <hr>
-          <button type="button" class="button is-primary is-primary is-large" @click="endExperiment">Thank you!</button>
+          <a type="button" class="button is-primary is-primary is-large" :href="downloadLink" download="results.csv">Download</a>
         </div>
       </div>
     </section>
