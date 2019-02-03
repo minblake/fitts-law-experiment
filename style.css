@@ -13,19 +13,23 @@
 }
 
 .medium {
-  width: 100px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
 }
 
 .small {
-  width: 50px;
-  height: 25px;
+  width: 30px;
+  height: 30px;
   font-size: 0.7em;
 }
 
 .large {
-  width: 150px;
-  height: 75px;
+  width: 90px;
+  height: 90px;
+}
+
+.small, .medium, .large{
+  border-radius: 50%
 }
 
 .top {

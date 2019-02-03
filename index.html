@@ -21,15 +21,23 @@
         </div>
       </div>
     </section>
-    <div v-if="hasExperimentStarted && !hasTrialEnded" class="experiment-container" @click="recordError">
-      <button class="button fitts" :class="startBtnClass" @click="selectedStart" type="button">Start</button>
-      <button v-if="isStartSelected" class="button fitts" :class="targetBtnClass" @click="selectedTarget" type="button">Target</button>
+    <section v-if="hasExperimentStarted && !hasExperimentEnded && beforeTrialsSetStart && hasTrialsSetEnded" class="hero is-light is-fullheight">
+      <div class="hero-body">
+        <div class="container has-text-centered">
+        <h1 class="title">{{ trialSetScreenMsg }}</h1>
+        <button type="button" class="button is-primary is-inverted is-large" @click="startTrialSet">Continue</button>
+        </div> 
+      </div>
+    </section>
+    <div v-if="hasExperimentStarted && !beforeTrialsSetStart && !hasTrialEnded" class="experiment-container" :class="{'has-background-danger': isErrorSelected}" @click="recordError">
+      <button class="button fitts" :class="startBtnClass" @click="selectedStart" type="button">S</button>
+      <button v-if="isStartSelected" class="button fitts" :class="targetBtnClass" @click="selectedTarget" type="button">T</button>
     </div>
     <section v-if="hasTrialEnded && !hasExperimentEnded" class="hero is-light is-fullheight">
       <div class="hero-body">
         <div class="container has-text-centered">
           <h1 class="title">Trials Completed</h1>
-          <h2 class="subtitle">{{ this.numTrials }} / {{ maxNumTrials }}</h2>
+          <h2 class="subtitle">{{ this.numTrials }} / {{ this.MAX_NUM_TRIALS }}</h2>
           <button type="button" class="button is-primary is-inverted is-large" @click="startTrial">Continue</button>
         </div>
       </div>

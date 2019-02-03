@@ -1,11 +1,15 @@
 new Vue({
   el: '#app',
   data: {
+    MAX_NUM_TRIAL_SET: 2,
+    MAX_NUM_TRIALS: 1,
     hasExperimentStarted: false,
     hasExperimentEnded: false,
     hasTrialEnded: false,
+    hasTrialsSetEnded: true,
+    beforeTrialsSetStart: true,
     numTrials: 0,
-    maxNumTrials: 2,
+    numTrialsSet: 0,
     amplitudes: [
       {
         amplitude: 'short',
@@ -28,28 +32,46 @@ new Vue({
     startSizeAndPosition: '',
     targetSizeAndPosition: '',
     isStartSelected: false,
+    isErrorSelected: false,
     results: [],
     clickSpeed: 0,
     timer: null,
-    timerStarted: false
+    timerStarted: false,
+    inputDev: {
+       indexFinger: 'Hold the phone with your left hand and use the index finger of your right hand',
+       thumb: 'Hold the phone with your right hand and use its thumb'
+    },
+    randomInputDev: {}
   },
   methods: {
     startExperiment() {
       this.hasExperimentStarted = true;
       this.hasExperimentEnded = false;
+      this.beforeTrialsSetStart = true;
       this.numTrials = 0;
       this.startTrial();
     },
     startTrial() {
       this.hasTrialEnded = false;
       this.numTrials++;
-      if (this.numTrials > this.maxNumTrials) {
-        this.hasExperimentStarted = false;
-        this.hasExperimentEnded = true;
+      if (this.numTrials > this.MAX_NUM_TRIALS) {
+	this.numTrialsSet++;
+        if(this.numTrialsSet > this.MAX_NUM_TRIAL_SET - 1){
+          this.hasExperimentStarted = false;
+          this.hasExperimentEnded = true;
+        }
+        this.hasTrialsSetEnded = true;
+        this.beforeTrialsSetStart = true;
       } else {
         this.generateRandomAmp();
         this.attachRandomClass();
       }
+    },
+    startTrialSet() {
+      this.numTrials = 0;
+      this.hasTrialsSetEnded = false;
+      this.beforeTrialsSetStart = false;
+      this.startTrial();
     },
     attachRandomClass() {
       const size = this.getRandomSize();
@@ -67,6 +89,11 @@ new Vue({
       let keys = Object.keys(this.randomAmp);
 
       return keys[this.generateRandomValue(keys.length)];
+    },
+    getRandomInputDev() {
+       let keys = Object.keys(this.inputDev);
+
+       return keys[this.generateRandomValue(keys.length)];
     },
     generateRandomAmp() {
       this.randomAmp = {
@@ -134,12 +161,37 @@ new Vue({
     },
     // TODO: called when user doesn't click the buttons
     recordError(event) {
-      if (!event.target.classList.contains("fitts")) {
+    
+      const { amplitude, size } = this.currentButtonState;
 
-        // do something with error
-        console.log('Pressed outside button');
+      if (!event.target.classList.contains("fitts")) {
+	this.stopTimer();
+
+	//Record Error
+	this.results.push(
+          [this.numTrials, amplitude, size, this.clickSpeed, "error occurred"]
+        );
+	this.clickSpeed = 0;
+
+
+	//Show feedback of error
+	this.isErrorSelected = true;
+	
+	// notify user that they missed the target
+        // shorten the time if necessary
+        setTimeout(() => {
+          //Show feedback of error
+	  this.isErrorSelected = false;
+        }, 300);
+
+	//Restart trial
+	this.isStartSelected = false;
       }
-    },
+    }
+  },
+  //Decide what input to use before experiment begins
+  beforeMount() {
+     this.randomInputDev = this.getRandomInputDev();
   },
   computed: {
     startBtnClass() {
@@ -158,6 +210,22 @@ new Vue({
     downloadLink() {
       const csv = 'data:text/csv;charset=utf-8,' + this.results.map(result => result.join(',')).join('\n');
       return encodeURI(csv);
-    }
+    },
+    trialSetScreenMsg() {
+      let message = 'Thank you for participating';
+      let inputDevChosen;
+
+      if(this.numTrialsSet == 0){
+        message = this.inputDev[this.randomInputDev];
+      }
+      else if(this.numTrialsSet < this.MAX_NUM_TRIAL_SET){
+	//Switch input device
+	inputDevChosen = this.randomInputDev.toLowerCase().indexOf("indexFinger") == -1 ? "indexFinger" : "thumb";
+        message = this.inputDev[inputDevChosen];
+	this.randomInputDev = inputDevChosen;
+      }
+
+      return message;
+    },
   }
 });
