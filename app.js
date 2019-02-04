@@ -2,7 +2,7 @@ new Vue({
   el: '#app',
   data: {
     MAX_NUM_TRIAL_SET: 2,
-    MAX_NUM_TRIALS: 1,
+    MAX_NUM_TRIALS: 10,
     hasExperimentStarted: false,
     hasExperimentEnded: false,
     hasTrialEnded: false,
