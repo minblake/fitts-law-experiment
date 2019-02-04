@@ -38,8 +38,8 @@ new Vue({
     timer: null,
     timerStarted: false,
     inputDev: {
-       indexFinger: 'Hold the phone with your left hand and use the index finger of your right hand',
-       thumb: 'Hold the phone with your right hand and use its thumb'
+      indexFinger: 'Hold the phone with your left hand and use the index finger of your right hand',
+      thumb: 'Hold the phone with your right hand and use its thumb'
     },
     randomInputDev: {}
   },
@@ -55,8 +55,8 @@ new Vue({
       this.hasTrialEnded = false;
       this.numTrials++;
       if (this.numTrials > this.MAX_NUM_TRIALS) {
-	this.numTrialsSet++;
-        if(this.numTrialsSet > this.MAX_NUM_TRIAL_SET - 1){
+        this.numTrialsSet++;
+        if (this.numTrialsSet > this.MAX_NUM_TRIAL_SET - 1) {
           this.hasExperimentStarted = false;
           this.hasExperimentEnded = true;
         }
@@ -91,9 +91,9 @@ new Vue({
       return keys[this.generateRandomValue(keys.length)];
     },
     getRandomInputDev() {
-       let keys = Object.keys(this.inputDev);
+      let keys = Object.keys(this.inputDev);
 
-       return keys[this.generateRandomValue(keys.length)];
+      return keys[this.generateRandomValue(keys.length)];
     },
     generateRandomAmp() {
       this.randomAmp = {
@@ -154,44 +154,37 @@ new Vue({
     },
     addRecord() {
       const { amplitude, size } = this.currentButtonState;
-      this.results.push(
-        [this.numTrials, amplitude, size, this.clickSpeed]
-      );
+      this.results.push([
+        this.randomInputDev,
+        this.numTrials,
+        amplitude,
+        size,
+        this.clickSpeed,
+        this.isErrorSelected ? 'Error Occurred' : ''
+      ]);
       this.clickSpeed = 0;
     },
-    // TODO: called when user doesn't click the buttons
     recordError(event) {
-    
+
       const { amplitude, size } = this.currentButtonState;
 
       if (!event.target.classList.contains("fitts")) {
-	this.stopTimer();
+        this.stopTimer();
+        this.isErrorSelected = true;
+        this.addRecord();
 
-	//Record Error
-	this.results.push(
-          [this.numTrials, amplitude, size, this.clickSpeed, "error occurred"]
-        );
-	this.clickSpeed = 0;
-
-
-	//Show feedback of error
-	this.isErrorSelected = true;
-	
-	// notify user that they missed the target
-        // shorten the time if necessary
         setTimeout(() => {
-          //Show feedback of error
-	  this.isErrorSelected = false;
+          this.isErrorSelected = false;
         }, 300);
 
-	//Restart trial
-	this.isStartSelected = false;
+        //Restart trial
+        this.isStartSelected = false;
       }
     }
   },
   //Decide what input to use before experiment begins
   beforeMount() {
-     this.randomInputDev = this.getRandomInputDev();
+    this.randomInputDev = this.getRandomInputDev();
   },
   computed: {
     startBtnClass() {
@@ -215,14 +208,14 @@ new Vue({
       let message = 'Thank you for participating';
       let inputDevChosen;
 
-      if(this.numTrialsSet == 0){
+      if (this.numTrialsSet == 0) {
         message = this.inputDev[this.randomInputDev];
       }
-      else if(this.numTrialsSet < this.MAX_NUM_TRIAL_SET){
-	//Switch input device
-	inputDevChosen = this.randomInputDev.toLowerCase().indexOf("indexFinger") == -1 ? "indexFinger" : "thumb";
+      else if (this.numTrialsSet < this.MAX_NUM_TRIAL_SET) {
+        //Switch input device
+        inputDevChosen = this.randomInputDev.indexOf("indexFinger") == -1 ? "indexFinger" : "thumb";
         message = this.inputDev[inputDevChosen];
-	this.randomInputDev = inputDevChosen;
+        this.randomInputDev = inputDevChosen;
       }
 
       return message;
