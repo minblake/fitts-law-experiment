@@ -125,7 +125,6 @@ new Vue({
       this.startTimer();
     },
     selectedTarget() {
-      // stop timer
       this.stopTimer();
       this.addRecord();
 
@@ -165,9 +164,6 @@ new Vue({
       this.clickSpeed = 0;
     },
     recordError(event) {
-
-      const { amplitude, size } = this.currentButtonState;
-
       if (!event.target.classList.contains("fitts")) {
         this.stopTimer();
         this.isErrorSelected = true;
@@ -191,6 +187,7 @@ new Vue({
       return [
         this.startSizeAndPosition,
         {
+          'is-warning': !this.isStartSelected,
           'is-success': this.isStartSelected,
         }
       ]
@@ -205,7 +202,7 @@ new Vue({
       return encodeURI(csv);
     },
     trialSetScreenMsg() {
-      let message = 'Thank you for participating';
+      let message = '';
       let inputDevChosen;
 
       if (this.numTrialsSet == 0) {

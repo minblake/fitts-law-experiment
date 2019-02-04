@@ -28,8 +28,9 @@
   height: 90px;
 }
 
-.small, .medium, .large{
-  border-radius: 50%
+.fitts {
+  border-radius: 50%;
+  font-weight: bold;
 }
 
 .top {
