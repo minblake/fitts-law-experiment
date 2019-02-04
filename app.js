@@ -38,8 +38,8 @@ new Vue({
     timer: null,
     timerStarted: false,
     inputDev: {
-      indexFinger: 'Hold the phone with your left hand and use the index finger of your right hand',
-      thumb: 'Hold the phone with your right hand and use its thumb'
+      indexFinger: 'Hold the phone with one hand and use the index finger of your other hand',
+      thumb: 'Hold the phone with one hand and use your thumb'
     },
     randomInputDev: {}
   },
