@@ -14,7 +14,7 @@ new Vue({
       {
         amplitude: 'short',
         start: 'bottom right',
-        target: 'bottom left'
+        target: 'bottom midcol'
       },
       {
         amplitude: 'normal',
